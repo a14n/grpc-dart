@@ -76,6 +76,12 @@ class ServerHandler extends ServiceCall {
       _cancelResponseSubscription();
     };
 
+    _stream.outgoingMessages.done.then((_) {
+      _isCanceled = true;
+      _timeoutTimer?.cancel();
+      _cancelResponseSubscription();
+    });
+
     _incomingSubscription = _stream.incomingMessages
         .transform(new GrpcHttpDecoder())
         .transform(grpcDecompressor())
